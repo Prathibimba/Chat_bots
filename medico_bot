@@ -1,0 +1,94 @@
+import React, { useState } from 'react';
+
+const medicalQueries = [
+  {
+    question: 'What are the symptoms of COVID-19?',
+    answer: 'Common symptoms of COVID-19 include fever, cough, and shortness of breath. In severe cases, it can cause pneumonia, acute respiratory distress syndrome, and even death.',
+  },
+  {
+    question: 'How can I prevent the spread of COVID-19?',
+    answer: 'To prevent the spread of COVID-19, practice good hygiene, wear a mask, maintain social distancing, and get vaccinated.',
+  },
+  {
+    question: 'What is the treatment for COVID-19?',
+    answer: 'Treatment for COVID-19 typically involves supportive care, such as rest, hydration, and oxygen therapy. In severe cases, antiviral medications and hospitalization may be necessary.',
+  },
+  {
+    question: 'What are the symptoms of diabetes?',
+    answer: 'Common symptoms of diabetes include increased thirst and urination, fatigue, blurred vision, and slow healing of cuts and wounds.',
+  },
+  {
+    question: 'How can I manage my diabetes?',
+    answer: 'To manage diabetes, maintain a healthy diet, exercise regularly, monitor blood sugar levels, and take medications as prescribed by your doctor.',
+  },
+];
+
+const ChatBot = () => {
+  const [query, setQuery] = useState('');
+  const [result, setResult] = useState('');
+  const [chatHistory, setChatHistory] = useState([]);
+
+  const handleQuery = () => {
+    const matchedQuery = medicalQueries.find((q) =>
+      q.question.toLowerCase().includes(query.toLowerCase())
+    );
+
+    if (matchedQuery) {
+      setResult(matchedQuery.answer);
+      setChatHistory((prevHistory) => [
+        ...prevHistory,
+        { question: query, answer: matchedQuery.answer },
+      ]);
+    } else {
+      setResult('Sorry, I could not find an answer to your question.');
+      setChatHistory((prevHistory) => [
+        ...prevHistory,
+        { question: query, answer: 'Sorry, I could not find an answer to your question.' },
+      ]);
+    }
+
+    setQuery('');
+  };
+
+  return (
+    <div className="max-w-md mx-auto p-4 bg-white rounded-lg shadow-md">
+      <h2 className="text-lg font-bold mb-4">Medical Chat Bot</h2>
+      <div className="flex flex-col justify-center items-center mb-4">
+        <input
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Ask a medical question..."
+          className="w-full p-2 pl-10 text-sm text-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-600"
+        />
+        <button
+          onClick={handleQuery}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg mt-2"
+        >
+          Ask
+        </button>
+      </div>
+      <div className="flex flex-col justify-center items-center mb-4">
+        <h3 className="text-lg font-bold mb-2">Result:</h3>
+        <p className="text-sm text-gray-700">{result}</p>
+      </div>
+      <div className="flex flex-col justify-center items-center mb-4">
+        <h3 className="text-lg font-bold mb-2">Chat History:</h3>
+        <ul>
+          {chatHistory.map((chat, index) => (
+            <li key={index} className="mb-2">
+              <p className="text-sm text-gray-700">
+                <strong>Question:</strong> {chat.question}
+              </p>
+              <p className="text-sm text-gray-700">
+                <strong>Answer:</strong> {chat.answer}
+              </p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+};
+
+export default ChatBot;
